@@ -1,53 +1,98 @@
 [
   {
     "input": {
-      "carrier": "Vodafone",
-      "tariff_name": "Red M",
-      "monthly_fee": "39.99 EUR",
-      "data_volume": "40 GB",
-      "contract_length": "24 months"
+      "provider": "Telekom",
+      "plan": "MagentaMobil S",
+      "data_volume": "10GB",
+      "monthly_price": "39.95 EUR",
+      "contract_duration": "24 months"
     },
     "ground_truth": {
-      "provider": "Vodafone",
-      "plan_name": "Red M",
-      "monthly_price_eur": 39.99,
-      "data_gb": 40.0,
-      "data_unlimited": false,
+      "provider": "Telekom",
+      "tariff_name": "MagentaMobil S",
+      "data_gb": 10,
+      "price_eur_per_month": 39.95,
       "contract_months": 24
     }
   },
   {
     "input": {
-      "operator": "Telekom",
-      "plan": "Magenta XL",
-      "price": "79.95",
-      "data_limit": "unlimited",
-      "duration": "1 month"
+      "operator": "Vodafone",
+      "tariff": "Red M",
+      "internet": "20 GB",
+      "price": "49.99",
+      "duration": "24"
+    },
+    "ground_truth": {
+      "provider": "Vodafone",
+      "tariff_name": "Red M",
+      "data_gb": 20,
+      "price_eur_per_month": 49.99,
+      "contract_months": 24
+    }
+  },
+  {
+    "input": {
+      "provider_name": "O2",
+      "plan_name": "O2 Mobile L",
+      "data": "50GB",
+      "price_monthly": "29.99 €",
+      "contract": "12 months"
+    },
+    "ground_truth": {
+      "provider": "O2",
+      "tariff_name": "O2 Mobile L",
+      "data_gb": 50,
+      "price_eur_per_month": 29.99,
+      "contract_months": 12
+    }
+  },
+  {
+    "input": {
+      "carrier": "Telekom",
+      "tariff_name": "MagentaMobil XL",
+      "data_allowance": "unlimited",
+      "price": "84.95 EUR",
+      "duration_months": "24"
     },
     "ground_truth": {
       "provider": "Telekom",
-      "plan_name": "Magenta XL",
-      "monthly_price_eur": 79.95,
+      "tariff_name": "MagentaMobil XL",
       "data_gb": null,
-      "data_unlimited": true,
+      "price_eur_per_month": 84.95,
+      "contract_months": 24
+    }
+  },
+  {
+    "input": {
+      "provider": "Vodafone",
+      "plan": "CallYa Digital",
+      "data": "15 gb",
+      "price": "20",
+      "contract": "1 month"
+    },
+    "ground_truth": {
+      "provider": "Vodafone",
+      "tariff_name": "CallYa Digital",
+      "data_gb": 15,
+      "price_eur_per_month": 20,
       "contract_months": 1
     }
   },
   {
     "input": {
-      "company": "O2",
-      "tariff": "Mobile L",
-      "fee": "29,99 EUR",
-      "internet": "25gb",
-      "term": "12"
+      "operator": "O2",
+      "plan": "O2 Free S",
+      "internet_data": "10 gigabytes",
+      "monthly_fee": "24.99 EUR",
+      "term": "24 months"
     },
     "ground_truth": {
       "provider": "O2",
-      "plan_name": "Mobile L",
-      "monthly_price_eur": 29.99,
-      "data_gb": 25.0,
-      "data_unlimited": false,
-      "contract_months": 12
+      "tariff_name": "O2 Free S",
+      "data_gb": 10,
+      "price_eur_per_month": 24.99,
+      "contract_months": 24
     }
   }
 ]
