@@ -1,50 +1,21 @@
 {
   "entity": "device",
-  "description": "Consumer electronic device (e.g., smartphone)",
   "attributes": [
     {
-      "name": "device_id",
-      "type": "string",
-      "description": "Unique identifier of the device"
-    },
-    {
       "name": "brand",
-      "type": "string",
-      "description": "Manufacturer brand"
+      "type": "string"
     },
     {
       "name": "model",
-      "type": "string",
-      "description": "Model name"
-    },
-    {
-      "name": "device_type",
-      "type": "string",
-      "enum": ["smartphone", "tablet", "watch", "other"]
-    },
-    {
-      "name": "release_year",
-      "type": "integer"
-    },
-    {
-      "name": "storage_gb",
-      "type": "integer"
+      "type": "string"
     },
     {
       "name": "ram_gb",
       "type": "integer"
     },
     {
-      "name": "screen_size_inch",
-      "type": "float"
-    },
-    {
-      "name": "battery_mah",
+      "name": "storage_gb",
       "type": "integer"
-    },
-    {
-      "name": "os",
-      "type": "string"
     },
     {
       "name": "price_eur",

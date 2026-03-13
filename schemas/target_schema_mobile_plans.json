@@ -1,11 +1,6 @@
 {
   "entity": "mobile_plan",
-  "description": "Mobile network tariff",
   "attributes": [
-    {
-      "name": "plan_id",
-      "type": "string"
-    },
     {
       "name": "provider",
       "type": "string"
@@ -20,8 +15,7 @@
     },
     {
       "name": "data_gb",
-      "type": "float",
-      "description": "Monthly mobile data allowance"
+      "type": "float"
     },
     {
       "name": "data_unlimited",
@@ -30,23 +24,6 @@
     {
       "name": "contract_months",
       "type": "integer"
-    },
-    {
-      "name": "network_type",
-      "type": "string",
-      "enum": ["4G", "5G"]
-    },
-    {
-      "name": "sms_included",
-      "type": "boolean"
-    },
-    {
-      "name": "calls_included",
-      "type": "boolean"
-    },
-    {
-      "name": "roaming_eu",
-      "type": "boolean"
     }
   ]
 }
