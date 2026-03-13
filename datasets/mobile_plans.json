@@ -1,0 +1,53 @@
+[
+  {
+    "input": {
+      "carrier": "Vodafone",
+      "tariff_name": "Red M",
+      "monthly_fee": "39.99 EUR",
+      "data_volume": "40 GB",
+      "contract_length": "24 months"
+    },
+    "ground_truth": {
+      "provider": "Vodafone",
+      "plan_name": "Red M",
+      "monthly_price_eur": 39.99,
+      "data_gb": 40.0,
+      "data_unlimited": false,
+      "contract_months": 24
+    }
+  },
+  {
+    "input": {
+      "operator": "Telekom",
+      "plan": "Magenta XL",
+      "price": "79.95",
+      "data_limit": "unlimited",
+      "duration": "1 month"
+    },
+    "ground_truth": {
+      "provider": "Telekom",
+      "plan_name": "Magenta XL",
+      "monthly_price_eur": 79.95,
+      "data_gb": null,
+      "data_unlimited": true,
+      "contract_months": 1
+    }
+  },
+  {
+    "input": {
+      "company": "O2",
+      "tariff": "Mobile L",
+      "fee": "29,99 EUR",
+      "internet": "25gb",
+      "term": "12"
+    },
+    "ground_truth": {
+      "provider": "O2",
+      "plan_name": "Mobile L",
+      "monthly_price_eur": 29.99,
+      "data_gb": 25.0,
+      "data_unlimited": false,
+      "contract_months": 12
+    }
+  }
+]
