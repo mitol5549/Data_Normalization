@@ -6,20 +6,16 @@
       "type": "string"
     },
     {
-      "name": "plan_name",
+      "name": "tariff_name",
       "type": "string"
     },
     {
-      "name": "monthly_price_eur",
+      "name": "price_eur_per_month",
       "type": "float"
     },
     {
       "name": "data_gb",
       "type": "float"
-    },
-    {
-      "name": "data_unlimited",
-      "type": "boolean"
     },
     {
       "name": "contract_months",
