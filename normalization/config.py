@@ -1,16 +1,12 @@
+import json
 import re
+from pathlib import Path
 
 
-TARGET_FIELDS = {
-    "device": ["brand", "model", "ram_gb", "storage_gb", "price_eur"],
-    "mobile_plan": [
-        "provider",
-        "plan_name",
-        "monthly_price_eur",
-        "data_gb",
-        "data_unlimited",
-        "contract_months",
-    ],
+SCHEMA_DIR = Path(__file__).resolve().parent.parent / "schemas"
+SCHEMA_FILES = {
+    "device": SCHEMA_DIR / "target_schema_devices.json",
+    "mobile_plan": SCHEMA_DIR / "target_schema_mobile_plans.json",
 }
 
 
@@ -68,6 +64,18 @@ BOOLEAN_TRUE = {"yes", "true", "included", "unlimited", "1"}
 BOOLEAN_FALSE = {"no", "false", "0"}
 
 
+def load_target_fields():
+    target_fields = {}
+    for entity, schema_path in SCHEMA_FILES.items():
+        # Keep target fields in sync with the JSON schemas instead of duplicating them in code.
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+        target_fields[entity] = [attribute["name"] for attribute in schema["attributes"]]
+    return target_fields
+
+
+TARGET_FIELDS = load_target_fields()
+
+
 def canonicalize_key(key):
     return re.sub(r"[^a-z0-9]+", "_", str(key).strip().lower()).strip("_")
 
@@ -105,6 +113,18 @@ def normalize_value(target_key, value):
         return None
 
     return str(value).strip() or None
+
+
+def map_known_fields(entity, data):
+    normalized = {"entity": entity}
+    mapping = SOURCE_MAPPINGS[entity]
+
+    for source_key, value in data.items():
+        target_key = mapping.get(canonicalize_key(source_key))
+        if target_key is not None:
+            normalized[target_key] = normalize_value(target_key, value)
+
+    return normalized
 
 
 def detect_entity(data):
