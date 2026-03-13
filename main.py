@@ -1,16 +1,19 @@
-# This is a sample Python script.
+import json
+from pathlib import Path
 
-# Press ⌃F5 to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press F9 to toggle the breakpoint.
+from evaluation.evaluator import run_evaluation
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+dataset_path = Path("datasets/device_dataset.json")
+with dataset_path.open(encoding="utf-8") as file:
+    dataset = json.load(file)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+results = run_evaluation(dataset)
+
+print(f"\nEvaluation results for {len(dataset)} samples:\n")
+
+for pipeline, metrics in results.items():
+    print(pipeline)
+    for key, value in metrics.items():
+        print(f"  {key}: {value:.3f}")
+    print()
