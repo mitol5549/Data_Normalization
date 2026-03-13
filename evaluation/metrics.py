@@ -20,8 +20,9 @@ def completeness(pred, truth):
     filled = 0
     total = len(truth)
 
-    for key in truth:
-        if key in pred and pred[key] is not None:
+    for key, expected in truth.items():
+        # Treat explicit nulls as complete when the target schema expects no value.
+        if key in pred and (pred[key] is not None or expected is None):
             filled += 1
 
     return filled / total if total else 0.0

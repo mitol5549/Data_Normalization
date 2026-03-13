@@ -13,6 +13,23 @@ PIPELINES = {
 }
 
 
+def build_sample_callback(sample_callback, dataset_name, pipeline_name):
+    if sample_callback is None:
+        return None
+
+    def callback(index, total, record, current_predictions):
+        sample_callback(
+            dataset_name,
+            pipeline_name,
+            index,
+            total,
+            record,
+            current_predictions,
+        )
+
+    return callback
+
+
 def evaluate_pipeline(pipeline, dataset, sample_callback=None):
     predictions = []
     accuracy_scores = []
@@ -65,18 +82,7 @@ def run_evaluation(datasets, progress_callback=None, sample_callback=None):
             metrics, predictions = evaluate_pipeline(
                 pipeline,
                 dataset,
-                sample_callback=(
-                    None
-                    if sample_callback is None
-                    else lambda index, total, record, current_predictions, dataset_name=dataset_name, pipeline_name=pipeline_name: sample_callback(
-                        dataset_name,
-                        pipeline_name,
-                        index,
-                        total,
-                        record,
-                        current_predictions,
-                    )
-                ),
+                sample_callback=build_sample_callback(sample_callback, dataset_name, pipeline_name),
             )
             results[dataset_name][pipeline_name] = {
                 "metrics": metrics,
