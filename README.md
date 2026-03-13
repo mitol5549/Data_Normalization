@@ -1,32 +1,38 @@
 # Data Normalization Prototype
 
-Простой прототип для сравнения трех подходов нормализации гетерогенных данных:
+This project compares three approaches for normalizing heterogeneous records into a shared target schema:
 
 - `rule`
 - `llm`
 - `hybrid`
 
-Проект приводит два типа данных к упрощенной целевой схеме:
+It currently supports two entity types:
 
-- устройства
-- мобильные тарифы
+- devices
+- mobile plans
 
-## Структура
+## Project Structure
 
-- `datasets/devices.json` - примеры устройств
-- `datasets/mobile_plans.json` - примеры тарифов
-- `outputs/` - готовые нормализованные данные и сводка метрик
+- `main.py` runs the full evaluation workflow and writes outputs.
+- `normalization/` contains the rule-based, LLM-based, and hybrid pipelines.
+- `evaluation/` contains metrics and evaluation orchestration.
+- `datasets/` contains input samples and ground-truth records.
+- `schemas/` contains the target schema definitions used by the pipelines.
+- `utils/llm_client.py` provides optional OpenAI API access with local fallback behavior.
+- `outputs/` is generated at runtime and stores normalized predictions plus the evaluation summary.
 
-## Целевые атрибуты
+## Target Schemas
 
-Устройства:
+Device fields:
+
 - `brand`
 - `model`
 - `ram_gb`
 - `storage_gb`
 - `price_eur`
 
-Тарифы:
+Mobile plan fields:
+
 - `provider`
 - `plan_name`
 - `monthly_price_eur`
@@ -34,17 +40,33 @@
 - `data_unlimited`
 - `contract_months`
 
-## Запуск
+## Setup
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Optional environment variables:
+
+- `OPENAI_API_KEY` enables live OpenAI requests for the `llm` pipeline.
+- `OPENAI_MODEL` overrides the default model name.
+- `OPENAI_TIMEOUT` sets the client timeout in seconds.
+
+You can place them in a local `.env` file.
+
+## Run
 
 ```bash
 python3 main.py
 ```
 
-Если в `.env` есть `OPENAI_API_KEY`, то `llm` и `hybrid` используют API OpenAI. Иначе они переходят в локальный fallback-режим.
+If `OPENAI_API_KEY` is missing, the project automatically falls back to local semantic mapping for the LLM-based pipeline.
 
-## Выходные файлы
+## Outputs
 
-После запуска создаются:
+Running the project creates:
 
 - `outputs/evaluation_summary.json`
 - `outputs/devices_rule_normalized.json`
@@ -53,3 +75,9 @@ python3 main.py
 - `outputs/mobile_plans_rule_normalized.json`
 - `outputs/mobile_plans_llm_normalized.json`
 - `outputs/mobile_plans_hybrid_normalized.json`
+
+## Notes
+
+- The rule-based pipeline uses deterministic source-field mappings and value normalization.
+- The LLM pipeline validates model output against the target schema and falls back to local mapping if the response is missing or invalid.
+- The hybrid pipeline prefers rule-based values and uses the LLM pipeline only to fill gaps.
