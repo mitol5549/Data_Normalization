@@ -1,0 +1,41 @@
+[
+  {
+    "input": {
+      "device_info": {
+        "maker": "Apple",
+        "name": "iPhone 15"
+      },
+      "hardware_specs": {
+        "memory": "6 GB RAM",
+        "storage_capacity": "128 gigabytes"
+      },
+      "pricing": {
+        "amount": "€999"
+      }
+    },
+    "ground_truth": {
+      "brand": "Apple",
+      "model": "iPhone 15",
+      "ram_gb": 6,
+      "storage_gb": 128,
+      "price_eur": 999
+    }
+  },
+  {
+    "input": {
+      "device": {
+        "brand_name": "OnePlus",
+        "model_name": "OnePlus 12"
+      },
+      "specs": "16GB RAM + 512GB storage",
+      "price_tag": "899 EUR"
+    },
+    "ground_truth": {
+      "brand": "OnePlus",
+      "model": "OnePlus 12",
+      "ram_gb": 16,
+      "storage_gb": 512,
+      "price_eur": 899
+    }
+  }
+]

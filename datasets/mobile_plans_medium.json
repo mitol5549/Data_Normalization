@@ -1,0 +1,34 @@
+[
+  {
+    "input": {
+      "operator": "Vodafone",
+      "tariff": "Red M",
+      "internet": "20 GB",
+      "price": "49.99",
+      "duration": "24"
+    },
+    "ground_truth": {
+      "provider": "Vodafone",
+      "tariff_name": "Red M",
+      "data_gb": 20,
+      "price_eur_per_month": 49.99,
+      "contract_months": 24
+    }
+  },
+  {
+    "input": {
+      "provider_name": "O2",
+      "plan": "O2 Free S",
+      "internet_data": "10GB",
+      "monthly_fee": "24.99 EUR",
+      "term": "24 months"
+    },
+    "ground_truth": {
+      "provider": "O2",
+      "tariff_name": "O2 Free S",
+      "data_gb": 10,
+      "price_eur_per_month": 24.99,
+      "contract_months": 24
+    }
+  }
+]

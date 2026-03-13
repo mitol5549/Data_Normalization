@@ -1,0 +1,40 @@
+[
+  {
+    "input": {
+      "carrier_info": {
+        "name": "Telekom"
+      },
+      "tariff_details": {
+        "title": "MagentaMobil XL",
+        "internet_package": "Unlimited data",
+        "price_info": "€84.95 per month"
+      },
+      "metadata": {
+        "contract": "24m"
+      }
+    },
+    "ground_truth": {
+      "provider": "Telekom",
+      "tariff_name": "MagentaMobil XL",
+      "data_gb": null,
+      "price_eur_per_month": 84.95,
+      "contract_months": 24
+    }
+  },
+  {
+    "input": {
+      "provider": "Vodafone",
+      "offer": "CallYa Digital",
+      "data_package": "15 gigabytes",
+      "monthly_price": "20€",
+      "contract_type": "1 month"
+    },
+    "ground_truth": {
+      "provider": "Vodafone",
+      "tariff_name": "CallYa Digital",
+      "data_gb": 15,
+      "price_eur_per_month": 20,
+      "contract_months": 1
+    }
+  }
+]
