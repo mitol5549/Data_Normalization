@@ -1,41 +1,55 @@
 # Data Normalization Prototype
 
-Research prototype for comparing three normalization strategies on heterogeneous product data:
+Простой прототип для сравнения трех подходов нормализации гетерогенных данных:
 
-- `rule`: deterministic schema mapping and value normalization
-- `llm`: LLM-first normalization with a semantic fallback when no API key is available
-- `hybrid`: rule-based extraction with LLM-assisted gap filling
+- `rule`
+- `llm`
+- `hybrid`
 
-## Project goals
+Проект приводит два типа данных к упрощенной целевой схеме:
 
-The project converts heterogeneous source records into one target schema and exposes metrics that are useful for an empirical comparison in a scientific paper:
+- устройства
+- мобильные тарифы
 
-- field-level accuracy
-- completeness
-- exact-match rate
-- average latency
-- failure rate
+## Структура
 
-## Run
+- `datasets/devices.json` - примеры устройств
+- `datasets/mobile_plans.json` - примеры тарифов
+- `outputs/` - готовые нормализованные данные и сводка метрик
+
+## Целевые атрибуты
+
+Устройства:
+- `brand`
+- `model`
+- `ram_gb`
+- `storage_gb`
+- `price_eur`
+
+Тарифы:
+- `provider`
+- `plan_name`
+- `monthly_price_eur`
+- `data_gb`
+- `data_unlimited`
+- `contract_months`
+
+## Запуск
 
 ```bash
-pip install -r requirements.txt
 python3 main.py
 ```
 
-If `OPENAI_API_KEY` is set, the LLM pipeline calls the OpenAI API. Without it, the code still runs by using a local semantic fallback so the benchmark remains executable.
+Если в `.env` есть `OPENAI_API_KEY`, то `llm` и `hybrid` используют API OpenAI. Иначе они переходят в локальный fallback-режим.
 
-## Dataset
+## Выходные файлы
 
-`datasets/device_dataset.json` now contains both `device` and `mobile_plan` samples with heterogeneous source keys and value formats. This gives you a better baseline for comparing:
+После запуска создаются:
 
-- how robust pure rules are to schema variation
-- where an LLM helps with semantic interpretation
-- whether a hybrid pipeline improves completeness without sacrificing precision
-
-## Suggested next research steps
-
-1. Split the dataset into train, validation and held-out evaluation subsets.
-2. Add more adversarial samples with missing keys, ambiguous labels and multilingual field names.
-3. Log token usage and API cost for the LLM and hybrid pipelines.
-4. Report per-entity metrics, not just aggregate scores.
+- `outputs/evaluation_summary.json`
+- `outputs/devices_rule_normalized.json`
+- `outputs/devices_llm_normalized.json`
+- `outputs/devices_hybrid_normalized.json`
+- `outputs/mobile_plans_rule_normalized.json`
+- `outputs/mobile_plans_llm_normalized.json`
+- `outputs/mobile_plans_hybrid_normalized.json`
