@@ -21,11 +21,13 @@ def load_datasets():
 
 
 def save_summary(results):
-    summary = {}
-    for dataset_name, dataset_results in results.items():
-        summary[dataset_name] = {}
-        for pipeline_name, payload in dataset_results.items():
-            summary[dataset_name][pipeline_name] = payload["metrics"]
+    summary = {
+        dataset_name: {
+            pipeline_name: payload["metrics"]
+            for pipeline_name, payload in dataset_results.items()
+        }
+        for dataset_name, dataset_results in results.items()
+    }
 
     (OUTPUT_DIR / "evaluation_summary.json").write_text(
         json.dumps(summary, indent=2, ensure_ascii=False),
@@ -48,7 +50,7 @@ def on_pipeline_progress(dataset_name, pipeline_name, status):
         print(f"Finished {pipeline_name} on {dataset_name}")
 
 
-def on_sample_processed(dataset_name, pipeline_name, index, total, record, predictions):
+def on_sample_processed(dataset_name, pipeline_name, index, total, _record, predictions):
     print(f"  processed {index}/{total}")
     save_pipeline_predictions(dataset_name, pipeline_name, predictions)
 
@@ -67,15 +69,19 @@ def print_results(results):
         print()
 
 
+def main():
+    OUTPUT_DIR.mkdir(exist_ok=True)
+    results = run_evaluation(
+        load_datasets(),
+        progress_callback=on_pipeline_progress,
+        sample_callback=on_sample_processed,
+    )
+    save_summary(results)
+    print_results(results)
+
+
 if __name__ == "__main__":
     try:
-        OUTPUT_DIR.mkdir(exist_ok=True)
-        results = run_evaluation(
-            load_datasets(),
-            progress_callback=on_pipeline_progress,
-            sample_callback=on_sample_processed,
-        )
-        save_summary(results)
-        print_results(results)
+        main()
     finally:
         close_client()
