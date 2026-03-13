@@ -1,5 +1,6 @@
 .idea/
 venv/
+outputs/
 __pycache__/
 .env
 .DS_Store
