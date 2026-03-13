@@ -4,6 +4,8 @@ from normalization.rule_based_pipeline import rule_pipeline
 
 
 def hybrid_pipeline(data):
+    # Run both strategies on the same input so the final result can combine the
+    # determinism of rules with the broader coverage of the LLM pipeline.
     rule_result = rule_pipeline(data)
     llm_result = llm_pipeline(data)
     entity = rule_result["entity"]

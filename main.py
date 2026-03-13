@@ -13,6 +13,8 @@ OUTPUT_DIR = Path("outputs")
 
 
 def load_datasets():
+    # Load all benchmark datasets once and keep the rest of the application independent
+    # from file-system details.
     datasets = {}
     for name, path in DATASET_FILES.items():
         with path.open(encoding="utf-8") as file:
@@ -21,6 +23,7 @@ def load_datasets():
 
 
 def save_summary(results):
+    # Persist only the aggregate metrics in a compact summary file.
     summary = {
         dataset_name: {
             pipeline_name: payload["metrics"]
@@ -36,6 +39,8 @@ def save_summary(results):
 
 
 def save_pipeline_predictions(dataset_name, pipeline_name, predictions):
+    # Save incremental pipeline output so intermediate results are available even
+    # before the full evaluation finishes.
     output_path = OUTPUT_DIR / f"{dataset_name}_{pipeline_name}_normalized.json"
     output_path.write_text(
         json.dumps(predictions, indent=2, ensure_ascii=False),
@@ -56,6 +61,8 @@ def on_sample_processed(dataset_name, pipeline_name, index, total, _record, pred
 
 
 def print_results(results):
+    # Print execution mode first because LLM-based pipelines can transparently switch
+    # between live API usage and local fallback behavior.
     llm_status = get_llm_status()
     print(f"\nLLM mode: {llm_status['mode']}")
     print(f"LLM status: {llm_status['reason']}\n")
@@ -70,6 +77,8 @@ def print_results(results):
 
 
 def main():
+    # The main workflow runs the benchmark, stores per-pipeline predictions, and
+    # writes a compact metrics summary for later inspection.
     OUTPUT_DIR.mkdir(exist_ok=True)
     results = run_evaluation(
         load_datasets(),

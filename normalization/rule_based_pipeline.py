@@ -6,6 +6,8 @@ def rule_pipeline(data):
     if entity is None:
         raise ValueError("Unable to detect entity type")
 
+    # Start with deterministic source-to-target mapping before applying
+    # entity-specific heuristics.
     normalized = map_known_fields(entity, data)
 
     # Unlimited plans often omit a numeric allowance, so infer the flag from raw values.

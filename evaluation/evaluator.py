@@ -17,6 +17,7 @@ def build_sample_callback(sample_callback, dataset_name, pipeline_name):
     if sample_callback is None:
         return None
 
+    # Attach dataset/pipeline metadata once so the inner evaluation loop stays simple.
     def callback(index, total, record, current_predictions):
         sample_callback(
             dataset_name,
@@ -31,6 +32,8 @@ def build_sample_callback(sample_callback, dataset_name, pipeline_name):
 
 
 def evaluate_pipeline(pipeline, dataset, sample_callback=None):
+    # Collect both quality metrics and operational metrics so different normalization
+    # strategies can be compared on correctness and runtime behavior.
     predictions = []
     accuracy_scores = []
     completeness_scores = []
@@ -45,6 +48,8 @@ def evaluate_pipeline(pipeline, dataset, sample_callback=None):
         try:
             prediction = pipeline(sample["input"])
         except Exception as error:
+            # Convert pipeline failures into structured records so the benchmark
+            # can continue and report the failure rate.
             prediction = {"error": str(error)}
             failures += 1
         latencies.append(time.perf_counter() - start)
@@ -71,6 +76,7 @@ def evaluate_pipeline(pipeline, dataset, sample_callback=None):
 
 
 def run_evaluation(datasets, progress_callback=None, sample_callback=None):
+    # Execute every pipeline against every dataset to produce a complete comparison matrix.
     results = {}
 
     for dataset_name, dataset in datasets.items():

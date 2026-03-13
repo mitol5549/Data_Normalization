@@ -10,6 +10,7 @@ except ImportError:  # pragma: no cover
 
 
 def load_local_env():
+    # Load a minimal .env file without adding another runtime dependency.
     env_path = Path(".env")
     if not env_path.exists():
         return
@@ -26,6 +27,7 @@ load_local_env()
 
 
 def build_client():
+    # Client creation is optional so the rest of the project can run in pure local mode.
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key or OpenAI is None:
         return None
@@ -40,6 +42,7 @@ last_error = None
 
 
 def get_llm_status():
+    # Report why the project is in API mode or fallback mode to make runtime behavior explicit.
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         return {"mode": "fallback", "reason": "OPENAI_API_KEY is missing"}
@@ -87,6 +90,7 @@ def ask_llm(prompt):
 
 
 def ask_llm_json(prompt):
+    # Try direct JSON parsing first, then recover from responses that wrap JSON in prose.
     text = ask_llm(prompt)
     if not text:
         return None
@@ -105,6 +109,7 @@ def ask_llm_json(prompt):
 
 
 def close_client():
+    # Best-effort cleanup keeps shutdown quiet across different client implementations.
     if client is None:
         return
 

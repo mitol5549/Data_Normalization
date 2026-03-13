@@ -6,6 +6,8 @@ from utils.llm_client import ask_llm_json
 
 
 def build_prompt(entity, data):
+    # Keep the prompt constrained to the allowed schema fields so the model is less
+    # likely to invent extra attributes.
     fields = ", ".join(TARGET_FIELDS[entity])
     return (
         f"Normalize this {entity} record into JSON.\n"
@@ -21,6 +23,8 @@ def semantic_fallback(entity, data):
 
 @lru_cache(maxsize=256)
 def _llm_pipeline_cached(payload):
+    # Cache by serialized payload so repeated evaluations of the same record do not
+    # trigger duplicate API calls.
     data = json.loads(payload)
     entity = detect_entity(data)
     if entity is None:
@@ -36,9 +40,12 @@ def _llm_pipeline_cached(payload):
         if len(normalized) > 1:
             return normalized
 
+    # Fall back to deterministic mapping whenever the LLM is unavailable or returns
+    # invalid / incomplete JSON.
     return semantic_fallback(entity, data)
 
 
 def llm_pipeline(data):
+    # Serialize with stable ordering to make the cache key deterministic.
     payload = json.dumps(data, sort_keys=True, ensure_ascii=True)
     return _llm_pipeline_cached(payload)

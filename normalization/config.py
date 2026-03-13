@@ -77,10 +77,13 @@ TARGET_FIELDS = load_target_fields()
 
 
 def canonicalize_key(key):
+    # Normalize external field names so "brand name", "brand-name", and "brand_name"
+    # can all be matched through the same mapping table.
     return re.sub(r"[^a-z0-9]+", "_", str(key).strip().lower()).strip("_")
 
 
 def extract_number(value):
+    # Extract the first numeric token from noisy strings such as "39.99 EUR" or "8 GB".
     text = str(value).strip().replace(",", ".")
     match = re.search(r"\d+(\.\d+)?", text)
     if match:
@@ -89,6 +92,7 @@ def extract_number(value):
 
 
 def normalize_value(target_key, value):
+    # Coerce heterogeneous input values into the types expected by the target schema.
     if value is None:
         return None
 
@@ -116,6 +120,8 @@ def normalize_value(target_key, value):
 
 
 def map_known_fields(entity, data):
+    # Apply only deterministic field mappings here. Pipelines can layer additional
+    # heuristics or LLM output on top of this baseline normalization.
     normalized = {"entity": entity}
     mapping = SOURCE_MAPPINGS[entity]
 
@@ -128,6 +134,7 @@ def map_known_fields(entity, data):
 
 
 def detect_entity(data):
+    # Infer the record type from how many source keys match each entity mapping.
     scores = {"device": 0, "mobile_plan": 0}
 
     for source_key in data:
