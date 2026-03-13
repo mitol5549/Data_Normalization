@@ -6,42 +6,84 @@ from normalization.llm_pipeline import llm_pipeline
 from normalization.rule_based_pipeline import rule_pipeline
 
 
-def evaluate_pipeline(pipeline, dataset):
-    acc_scores = []
-    comp_scores = []
-    exact_scores = []
-    latency = []
+PIPELINES = {
+    "rule": rule_pipeline,
+    "llm": llm_pipeline,
+    "hybrid": hybrid_pipeline,
+}
+
+
+def evaluate_pipeline(pipeline, dataset, sample_callback=None):
+    predictions = []
+    accuracy_scores = []
+    completeness_scores = []
+    exact_match_scores = []
+    latencies = []
     failures = 0
 
-    for sample in dataset:
-        raw = sample["input"]
-        truth = sample["ground_truth"]
+    total_samples = len(dataset)
 
+    for index, sample in enumerate(dataset, start=1):
         start = time.perf_counter()
         try:
-            pred = pipeline(raw)
-        except Exception:
-            pred = {}
+            prediction = pipeline(sample["input"])
+        except Exception as error:
+            prediction = {"error": str(error)}
             failures += 1
-        latency.append(time.perf_counter() - start)
+        latencies.append(time.perf_counter() - start)
 
-        acc_scores.append(accuracy(pred, truth))
-        comp_scores.append(completeness(pred, truth))
-        exact_scores.append(exact_match(pred, truth))
+        record = {"input": sample["input"], "ground_truth": sample["ground_truth"], "prediction": prediction}
+        predictions.append(record)
+
+        accuracy_scores.append(accuracy(prediction, sample["ground_truth"]))
+        completeness_scores.append(completeness(prediction, sample["ground_truth"]))
+        exact_match_scores.append(exact_match(prediction, sample["ground_truth"]))
+
+        if sample_callback is not None:
+            sample_callback(index, total_samples, record, predictions)
 
     total = len(dataset) or 1
-    return {
-        "accuracy": sum(acc_scores) / total,
-        "completeness": sum(comp_scores) / total,
-        "exact_match": sum(exact_scores) / total,
-        "latency": sum(latency) / total,
+    metrics = {
+        "accuracy": sum(accuracy_scores) / total,
+        "completeness": sum(completeness_scores) / total,
+        "exact_match": sum(exact_match_scores) / total,
+        "latency": sum(latencies) / total,
         "failure_rate": failures / total,
     }
+    return metrics, predictions
 
 
-def run_evaluation(dataset):
-    return {
-        "rule": evaluate_pipeline(rule_pipeline, dataset),
-        "llm": evaluate_pipeline(llm_pipeline, dataset),
-        "hybrid": evaluate_pipeline(hybrid_pipeline, dataset),
-    }
+def run_evaluation(datasets, progress_callback=None, sample_callback=None):
+    results = {}
+
+    for dataset_name, dataset in datasets.items():
+        results[dataset_name] = {}
+        for pipeline_name, pipeline in PIPELINES.items():
+            if progress_callback is not None:
+                progress_callback(dataset_name, pipeline_name, "started")
+
+            metrics, predictions = evaluate_pipeline(
+                pipeline,
+                dataset,
+                sample_callback=(
+                    None
+                    if sample_callback is None
+                    else lambda index, total, record, current_predictions, dataset_name=dataset_name, pipeline_name=pipeline_name: sample_callback(
+                        dataset_name,
+                        pipeline_name,
+                        index,
+                        total,
+                        record,
+                        current_predictions,
+                    )
+                ),
+            )
+            results[dataset_name][pipeline_name] = {
+                "metrics": metrics,
+                "predictions": predictions,
+            }
+
+            if progress_callback is not None:
+                progress_callback(dataset_name, pipeline_name, "finished")
+
+    return results
