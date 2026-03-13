@@ -1,7 +1,7 @@
 import json
 from functools import lru_cache
 
-from normalization.config import TARGET_FIELDS, SOURCE_MAPPINGS, canonicalize_key, detect_entity, normalize_value
+from normalization.config import TARGET_FIELDS, detect_entity, map_known_fields, normalize_value
 from utils.llm_client import ask_llm_json
 
 
@@ -16,15 +16,7 @@ def build_prompt(entity, data):
 
 
 def semantic_fallback(entity, data):
-    normalized = {"entity": entity}
-    mapping = SOURCE_MAPPINGS[entity]
-
-    for source_key, value in data.items():
-        target_key = mapping.get(canonicalize_key(source_key))
-        if target_key is not None:
-            normalized[target_key] = normalize_value(target_key, value)
-
-    return normalized
+    return map_known_fields(entity, data)
 
 
 @lru_cache(maxsize=256)
@@ -37,6 +29,7 @@ def _llm_pipeline_cached(payload):
     response = ask_llm_json(build_prompt(entity, data))
     if isinstance(response, dict):
         normalized = {"entity": entity}
+        # Only accept fields that exist in the target schema and re-normalize them locally.
         for field in TARGET_FIELDS[entity]:
             if field in response:
                 normalized[field] = normalize_value(field, response[field])

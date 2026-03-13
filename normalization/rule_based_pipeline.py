@@ -1,4 +1,4 @@
-from normalization.config import SOURCE_MAPPINGS, canonicalize_key, detect_entity, normalize_value
+from normalization.config import detect_entity, map_known_fields
 
 
 def rule_pipeline(data):
@@ -6,14 +6,9 @@ def rule_pipeline(data):
     if entity is None:
         raise ValueError("Unable to detect entity type")
 
-    normalized = {"entity": entity}
-    mapping = SOURCE_MAPPINGS[entity]
+    normalized = map_known_fields(entity, data)
 
-    for source_key, value in data.items():
-        target_key = mapping.get(canonicalize_key(source_key))
-        if target_key is not None:
-            normalized[target_key] = normalize_value(target_key, value)
-
+    # Unlimited plans often omit a numeric allowance, so infer the flag from raw values.
     if entity == "mobile_plan" and normalized.get("data_unlimited") is None:
         normalized["data_unlimited"] = any("unlimited" in str(value).lower() for value in data.values())
 

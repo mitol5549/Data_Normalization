@@ -10,6 +10,7 @@ def hybrid_pipeline(data):
 
     merged = {"entity": entity}
     for field in TARGET_FIELDS[entity]:
+        # Prefer deterministic rule-based values and only fill remaining gaps from the LLM output.
         if field in rule_result:
             merged[field] = rule_result[field]
         elif field in llm_result:
