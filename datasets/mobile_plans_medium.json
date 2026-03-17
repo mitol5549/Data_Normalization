@@ -30,5 +30,69 @@
       "price_eur_per_month": 29.99,
       "contract_months": 12
     }
+  },
+  {
+    "input": {
+      "carrier": "O2",
+      "tariff_name": "O2 Mobile M",
+      "data_volume": "20 GB",
+      "price": "29.99 EUR",
+      "duration": "12"
+    },
+    "ground_truth": {
+      "provider": "O2",
+      "tariff_name": "O2 Mobile M",
+      "data_gb": 20,
+      "price_eur_per_month": 29.99,
+      "contract_months": 12
+    }
+  },
+  {
+    "input": {
+      "provider_name": "Telekom",
+      "plan": "MagentaMobil L",
+      "internet": "40GB",
+      "monthly_fee": "59.95 €",
+      "term": "24 months"
+    },
+    "ground_truth": {
+      "provider": "Telekom",
+      "tariff_name": "MagentaMobil L",
+      "data_gb": 40,
+      "price_eur_per_month": 59.95,
+      "contract_months": 24
+    }
+  },
+  {
+    "input": {
+      "operator": "Vodafone",
+      "offer": "Red XL",
+      "data": "unlimited",
+      "price": "79.99",
+      "contract_duration": "24"
+    },
+    "ground_truth": {
+      "provider": "Vodafone",
+      "tariff_name": "Red XL",
+      "data_gb": null,
+      "price_eur_per_month": 79.99,
+      "contract_months": 24
+    }
+  },
+  {
+    "input": {
+      "provider": "O2",
+      "plan_name": "O2 Free L",
+      "internet_data": "50 gigabytes",
+      "price_monthly": "34.99 EUR",
+      "contract": "24 months"
+    },
+    "ground_truth": {
+      "provider": "O2",
+      "tariff_name": "O2 Free L",
+      "data_gb": 50,
+      "price_eur_per_month": 34.99,
+      "contract_months": 24
+    }
   }
 ]

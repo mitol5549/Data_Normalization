@@ -30,5 +30,53 @@
       "price_eur_per_month": 49.95,
       "contract_months": 24
     }
+  },
+  {
+    "input": {
+      "provider": "Vodafone",
+      "plan_name": "Red L",
+      "data_gb": "40",
+      "price": "59.99",
+      "contract": "24"
+    },
+    "ground_truth": {
+      "provider": "Vodafone",
+      "tariff_name": "Red L",
+      "data_gb": 40,
+      "price_eur_per_month": 59.99,
+      "contract_months": 24
+    }
+  },
+  {
+    "input": {
+      "provider": "O2",
+      "plan_name": "O2 Mobile M",
+      "data_gb": "20",
+      "price": "29.99",
+      "contract": "12"
+    },
+    "ground_truth": {
+      "provider": "O2",
+      "tariff_name": "O2 Mobile M",
+      "data_gb": 20,
+      "price_eur_per_month": 29.99,
+      "contract_months": 12
+    }
+  },
+  {
+    "input": {
+      "provider": "Telekom",
+      "plan_name": "MagentaMobil XS",
+      "data_gb": "5",
+      "price": "24.95",
+      "contract": "24"
+    },
+    "ground_truth": {
+      "provider": "Telekom",
+      "tariff_name": "MagentaMobil XS",
+      "data_gb": 5,
+      "price_eur_per_month": 24.95,
+      "contract_months": 24
+    }
   }
 ]

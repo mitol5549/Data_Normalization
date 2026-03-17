@@ -34,5 +34,74 @@
       "price_eur_per_month": 10,
       "contract_months": 1
     }
+  },
+  {
+    "input": {
+      "provider_info": {
+        "name": "Telekom"
+      },
+      "offer": {
+        "title": "MagentaMobil XL",
+        "data": "Unlimited internet",
+        "price": "84.95€ per month"
+      },
+      "contract": {
+        "duration": "24m"
+      }
+    },
+    "ground_truth": {
+      "provider": "Telekom",
+      "tariff_name": "MagentaMobil XL",
+      "data_gb": null,
+      "price_eur_per_month": 84.95,
+      "contract_months": 24
+    }
+  },
+  {
+    "input": {
+      "provider": "Vodafone",
+      "description": "Red M plan includes 20GB data for 49.99 EUR monthly, 24 months contract"
+    },
+    "ground_truth": {
+      "provider": "Vodafone",
+      "tariff_name": "Red M",
+      "data_gb": 20,
+      "price_eur_per_month": 49.99,
+      "contract_months": 24
+    }
+  },
+  {
+    "input": {
+      "carrier": "O2",
+      "plan_details": "O2 Mobile XL",
+      "bundle": "Unlimited data",
+      "cost": "49.99€",
+      "duration": "24 months"
+    },
+    "ground_truth": {
+      "provider": "O2",
+      "tariff_name": "O2 Mobile XL",
+      "data_gb": null,
+      "price_eur_per_month": 49.99,
+      "contract_months": 24
+    }
+  },
+  {
+    "input": {
+      "provider": "Vodafone",
+      "plan": "CallYa Allnet Flat",
+      "data_package": "15 GB data",
+      "price": "20 EUR",
+      "contract": "1 month",
+      "bonus": "extra minutes",
+      "rating": "4.7"
+    },
+    "ground_truth": {
+      "provider": "Vodafone",
+      "tariff_name": "CallYa Allnet Flat",
+      "data_gb": 15,
+      "price_eur_per_month": 20,
+      "contract_months": 1
+    }
   }
 ]

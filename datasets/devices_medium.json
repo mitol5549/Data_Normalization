@@ -46,5 +46,53 @@
       "storage_gb": 64,
       "price_eur": 199.99
     }
+  },
+  {
+    "input": {
+      "maker": "Huawei",
+      "phone_model": "P60 Pro",
+      "ram_memory": "12 GB",
+      "storage_capacity": "512GB",
+      "cost": "1199"
+    },
+    "ground_truth": {
+      "brand": "Huawei",
+      "model": "P60 Pro",
+      "ram_gb": 12,
+      "storage_gb": 512,
+      "price_eur": 1199
+    }
+  },
+  {
+    "input": {
+      "brand_name": "Honor",
+      "device": "Magic5 Lite",
+      "memory": "6144MB",
+      "disk": "128GB",
+      "price": "349.99"
+    },
+    "ground_truth": {
+      "brand": "Honor",
+      "model": "Magic5 Lite",
+      "ram_gb": 6,
+      "storage_gb": 128,
+      "price_eur": 349.99
+    }
+  },
+  {
+    "input": {
+      "vendor": "Asus",
+      "product_name": "ROG Phone 7",
+      "memory": "16GB RAM",
+      "capacity": "256 GB",
+      "price_eur": "999"
+    },
+    "ground_truth": {
+      "brand": "Asus",
+      "model": "ROG Phone 7",
+      "ram_gb": 16,
+      "storage_gb": 256,
+      "price_eur": 999
+    }
   }
 ]

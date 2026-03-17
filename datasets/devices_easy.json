@@ -46,5 +46,53 @@
       "storage_gb": 64,
       "price_eur": 529
     }
+  },
+  {
+    "input": {
+      "brand": "Sony",
+      "model": "Xperia 5 V",
+      "ram": "8",
+      "storage": "128",
+      "price": "899"
+    },
+    "ground_truth": {
+      "brand": "Sony",
+      "model": "Xperia 5 V",
+      "ram_gb": 8,
+      "storage_gb": 128,
+      "price_eur": 899
+    }
+  },
+  {
+    "input": {
+      "brand": "Motorola",
+      "model": "Edge 40",
+      "ram": "8",
+      "storage": "256",
+      "price": "599"
+    },
+    "ground_truth": {
+      "brand": "Motorola",
+      "model": "Edge 40",
+      "ram_gb": 8,
+      "storage_gb": 256,
+      "price_eur": 599
+    }
+  },
+  {
+    "input": {
+      "brand": "Nokia",
+      "model": "G42",
+      "ram": "6",
+      "storage": "128",
+      "price": "249"
+    },
+    "ground_truth": {
+      "brand": "Nokia",
+      "model": "G42",
+      "ram_gb": 6,
+      "storage_gb": 128,
+      "price_eur": 249
+    }
   }
 ]

@@ -37,5 +37,78 @@
       "storage_gb": 128,
       "price_eur": 799
     }
+  },
+  {
+    "input": {
+      "product_name": "Samsung Galaxy S23 Ultra",
+      "description": "The new model comes with 12GB RAM and 256GB storage.",
+      "pricing": "Price: 1199 EUR"
+    },
+    "ground_truth": {
+      "brand": "Samsung",
+      "model": "Galaxy S23 Ultra",
+      "ram_gb": 12,
+      "storage_gb": 256,
+      "price_eur": 1199
+    }
+  },
+  {
+    "input": {
+      "vendor": "Xiaomi",
+      "product_name": "13T Pro",
+      "details": "Device ships with 12GB RAM and 512GB storage.",
+      "offer_price": "EUR 799"
+    },
+    "ground_truth": {
+      "brand": "Xiaomi",
+      "model": "13T Pro",
+      "ram_gb": 12,
+      "storage_gb": 512,
+      "price_eur": 799
+    }
+  },
+  {
+    "input": {
+      "brand": "Apple",
+      "model_name": "iPhone 15 Pro",
+      "memory": "6144MB",
+      "storage": "1 TB",
+      "price": "€1399"
+    },
+    "ground_truth": {
+      "brand": "Apple",
+      "model": "iPhone 15 Pro",
+      "ram_gb": 6,
+      "storage_gb": 1024,
+      "price_eur": 1399
+    }
+  },
+  {
+    "input": {
+      "product_name": "Google Pixel 8 Pro",
+      "specs": "12GB RAM / 128GB",
+      "price_label": "🔥 Special offer: only 899 EUR today!"
+    },
+    "ground_truth": {
+      "brand": "Google",
+      "model": "Pixel 8 Pro",
+      "ram_gb": 12,
+      "storage_gb": 128,
+      "price_eur": 899
+    }
+  },
+  {
+    "input": {
+      "vendor": "OnePlus",
+      "model_name": "12",
+      "description": "16GB RAM, 512GB storage, price 899€"
+    },
+    "ground_truth": {
+      "brand": "OnePlus",
+      "model": "OnePlus 12",
+      "ram_gb": 16,
+      "storage_gb": 512,
+      "price_eur": 899
+    }
   }
 ]
