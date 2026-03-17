@@ -25,6 +25,31 @@ The benchmark is intentionally set up so that:
 - medium datasets require a combination of explicit mappings and semantic recovery,
 - hard datasets expose the limits of rule-based extraction and require LLM reasoning.
 
+## Benchmark Datasets
+
+The current benchmark uses six datasets stored in `datasets/`:
+
+- `devices_easy.json`
+- `devices_medium.json`
+- `devices_hard.json`
+- `mobile_plans_easy.json`
+- `mobile_plans_medium.json`
+- `mobile_plans_hard.json`
+
+Their intended roles are:
+
+- `devices_easy`: flat, explicit device records that the rule-based baseline should normalize almost perfectly.
+- `devices_medium`: device records with alternative but still recognizable source keys and value formats.
+- `devices_hard`: nested, noisy, partially textual, or weakly structured device records that expose the limits of deterministic extraction.
+- `mobile_plans_easy`: flat and explicit tariff records that should be solved by rule-based mappings.
+- `mobile_plans_medium`: mobile plan records with synonym keys, light noise, and less direct formatting.
+- `mobile_plans_hard`: nested or text-heavy mobile plan records that require stronger semantic reasoning.
+
+Each dataset file contains a list of samples with:
+
+- `input`: the heterogeneous source record
+- `ground_truth`: the expected normalized target record
+
 ## Project Structure
 
 - `main.py` runs the full evaluation workflow and writes outputs.
@@ -123,12 +148,24 @@ If the OpenAI client is unavailable or the model response is invalid, the `llm` 
 Running the project creates:
 
 - `outputs/evaluation_summary.json`
-- `outputs/devices_rule_normalized.json`
-- `outputs/devices_llm_normalized.json`
-- `outputs/devices_hybrid_normalized.json`
-- `outputs/mobile_plans_rule_normalized.json`
-- `outputs/mobile_plans_llm_normalized.json`
-- `outputs/mobile_plans_hybrid_normalized.json`
+- `outputs/devices_easy_rule_normalized.json`
+- `outputs/devices_easy_llm_normalized.json`
+- `outputs/devices_easy_hybrid_normalized.json`
+- `outputs/devices_medium_rule_normalized.json`
+- `outputs/devices_medium_llm_normalized.json`
+- `outputs/devices_medium_hybrid_normalized.json`
+- `outputs/devices_hard_rule_normalized.json`
+- `outputs/devices_hard_llm_normalized.json`
+- `outputs/devices_hard_hybrid_normalized.json`
+- `outputs/mobile_plans_easy_rule_normalized.json`
+- `outputs/mobile_plans_easy_llm_normalized.json`
+- `outputs/mobile_plans_easy_hybrid_normalized.json`
+- `outputs/mobile_plans_medium_rule_normalized.json`
+- `outputs/mobile_plans_medium_llm_normalized.json`
+- `outputs/mobile_plans_medium_hybrid_normalized.json`
+- `outputs/mobile_plans_hard_rule_normalized.json`
+- `outputs/mobile_plans_hard_llm_normalized.json`
+- `outputs/mobile_plans_hard_hybrid_normalized.json`
 
 Each per-pipeline output file stores:
 
