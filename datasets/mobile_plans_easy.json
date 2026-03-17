@@ -1,33 +1,33 @@
 [
   {
     "input": {
-      "provider": "Telekom",
-      "plan_name": "MagentaMobil S",
-      "data_gb": "10",
-      "price": "39.95",
-      "contract": "24"
+      "provider": "O2",
+      "plan_name": "O2 Mobile S",
+      "data_gb": "5",
+      "price": "19.99",
+      "contract": "12"
     },
     "ground_truth": {
-      "provider": "Telekom",
-      "tariff_name": "MagentaMobil S",
-      "data_gb": 10,
-      "price_eur_per_month": 39.95,
-      "contract_months": 24
+      "provider": "O2",
+      "tariff_name": "O2 Mobile S",
+      "data_gb": 5,
+      "price_eur_per_month": 19.99,
+      "contract_months": 12
     }
   },
   {
     "input": {
-      "provider": "Vodafone",
-      "plan_name": "Red M",
+      "provider": "Telekom",
+      "plan_name": "MagentaMobil M",
       "data_gb": "20",
-      "price": "49.99",
+      "price": "49.95",
       "contract": "24"
     },
     "ground_truth": {
-      "provider": "Vodafone",
-      "tariff_name": "Red M",
+      "provider": "Telekom",
+      "tariff_name": "MagentaMobil M",
       "data_gb": 20,
-      "price_eur_per_month": 49.99,
+      "price_eur_per_month": 49.95,
       "contract_months": 24
     }
   }
