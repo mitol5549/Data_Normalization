@@ -5,10 +5,7 @@ from evaluation.evaluator import run_evaluation
 from utils.llm_client import close_client, get_llm_status
 
 
-DATASET_FILES = {
-    "devices": Path("datasets/devices.json"),
-    "mobile_plans": Path("datasets/mobile_plans.json"),
-}
+DATASET_DIR = Path("datasets")
 OUTPUT_DIR = Path("outputs")
 
 
@@ -16,9 +13,9 @@ def load_datasets():
     # Load all benchmark datasets once and keep the rest of the application independent
     # from file-system details.
     datasets = {}
-    for name, path in DATASET_FILES.items():
+    for path in sorted(DATASET_DIR.glob("*.json")):
         with path.open(encoding="utf-8") as file:
-            datasets[name] = json.load(file)
+            datasets[path.stem] = json.load(file)
     return datasets
 
 
@@ -61,8 +58,8 @@ def on_sample_processed(dataset_name, pipeline_name, index, total, _record, pred
 
 
 def print_results(results):
-    # Print execution mode first because LLM-based pipelines can transparently switch
-    # between live API usage and local fallback behavior.
+    # Print execution mode first because LLM-based pipelines depend on external
+    # API availability and may fail when the client is not configured.
     llm_status = get_llm_status()
     print(f"\nLLM mode: {llm_status['mode']}")
     print(f"LLM status: {llm_status['reason']}\n")
