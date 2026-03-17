@@ -42,7 +42,7 @@ last_error = None
 
 
 def get_llm_status():
-    # Report why the project is in API mode or fallback mode to make runtime behavior explicit.
+    # Report whether the API client is ready so runtime behavior stays explicit.
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         return {"mode": "fallback", "reason": "OPENAI_API_KEY is missing"}
