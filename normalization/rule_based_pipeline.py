@@ -1,9 +1,6 @@
-from normalization.config import (
-    RULE_SOURCE_MAPPINGS,
-    detect_entity,
-    ensure_all_target_fields,
-    map_known_fields,
-)
+from normalization.mappings import RULE_SOURCE_MAPPINGS
+from normalization.source_fields import detect_entity
+from normalization.value_normalization import ensure_all_target_fields, map_known_fields
 
 
 def rule_pipeline(data):

@@ -1,11 +1,9 @@
 import json
 from functools import lru_cache
 
-from normalization.config import (
-    TARGET_FIELDS,
-    detect_entity,
-    normalize_value,
-)
+from normalization.schema import TARGET_FIELDS
+from normalization.source_fields import detect_entity
+from normalization.value_normalization import normalize_value
 from utils.llm_client import ask_llm_json
 
 
@@ -69,3 +67,7 @@ def llm_pipeline(data):
     # Serialize with stable ordering to make the cache key deterministic.
     payload = json.dumps(data, sort_keys=True, ensure_ascii=True)
     return _llm_pipeline_cached(payload)
+
+
+def clear_llm_cache():
+    _llm_pipeline_cached.cache_clear()
