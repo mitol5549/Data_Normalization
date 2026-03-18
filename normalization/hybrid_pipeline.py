@@ -1,4 +1,4 @@
-from normalization.config import TARGET_FIELDS
+from normalization.schema import TARGET_FIELDS
 from normalization.llm_pipeline import extract_fields_with_llm
 from normalization.rule_based_pipeline import rule_pipeline
 
