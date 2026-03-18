@@ -129,7 +129,11 @@ Required for LLM and hybrid pipelines:
 
 - `OPENAI_API_KEY` enables live OpenAI requests for the `llm` and `hybrid` pipelines.
 - `OPENAI_MODEL` overrides the default model name.
+- `OPENAI_TEMPERATURE` controls sampling and defaults to `0` for deterministic evaluation runs.
 - `OPENAI_TIMEOUT` sets the client timeout in seconds.
+- `OPENAI_PRICE_INPUT_PER_1M` optionally sets the input-token price in USD per 1M tokens.
+- `OPENAI_PRICE_OUTPUT_PER_1M` optionally sets the output-token price in USD per 1M tokens.
+- `BENCHMARK_RUNS` optionally repeats each sample multiple times and averages latency/cost metrics across those runs.
 
 You can place them in a local `.env` file.
 
@@ -142,6 +146,53 @@ python3 main.py
 The evaluation runs every dataset through all three pipelines and writes both aggregate metrics and per-sample predictions to `outputs/`.
 
 If the OpenAI client is unavailable or the model response is invalid, the `llm` pipeline fails instead of falling back to local heuristics. The `hybrid` pipeline only depends on the LLM when rule-based extraction leaves unresolved fields.
+
+## Evaluation Methodology
+
+The benchmark evaluates each dataset with all three pipelines and records both quality and operational metrics.
+
+By default, the benchmark uses deterministic model settings:
+
+- `OPENAI_TEMPERATURE=0`
+- one prediction per sample is used for quality scoring
+
+If `BENCHMARK_RUNS` is greater than `1`, each sample is executed multiple times. In that case:
+
+- `accuracy`, `completeness`, `exact_match`, and `failure_rate` are computed from the first run only
+- `latency`, `latency_stddev`, token usage, request counts, and estimated cost are averaged across all runs
+
+This design keeps quality evaluation simple and reproducible while reducing noise in runtime measurements.
+
+For the full `llm` pipeline, the in-process LLM cache is cleared before repeated timing attempts so latency reflects real model calls instead of cache hits. The `hybrid` pipeline is evaluated as implemented: if rule-based extraction resolves all fields, no LLM request is made for that sample.
+
+## Metric Definitions
+
+Quality metrics are computed against the keys present in `ground_truth`.
+
+- `accuracy`: fraction of target fields whose predicted value exactly matches the ground-truth value
+- `completeness`: fraction of target fields that are filled in the prediction; if the ground truth expects `null`, a predicted `null` still counts as complete
+- `exact_match`: `1.0` only if all ground-truth fields match, otherwise `0.0`
+- `failure_rate`: fraction of samples for which the pipeline raised an exception and the prediction was stored as `{"error": "..."}`
+
+Operational metrics:
+
+- `latency`: mean runtime per sample in seconds
+- `latency_stddev`: population standard deviation of all recorded per-run latencies
+- `benchmark_runs`: number of repeated executions per sample used for operational measurements
+- `llm_requests`: average number of LLM API requests per sample
+- `prompt_tokens`: average number of input tokens consumed per sample
+- `completion_tokens`: average number of output tokens consumed per sample
+- `total_tokens`: average total tokens consumed per sample
+- `estimated_cost_usd`: average estimated API cost per sample, computed from token usage and the configured input/output prices
+- `llm_model`: model name used by LLM-backed pipelines
+
+## Interpretation Notes
+
+- Extra keys in predictions that are not part of `ground_truth` do not reduce `accuracy` or `exact_match`. For example, predictions may contain an internal `entity` field without affecting the score.
+- Numeric comparison is tolerant for floating-point values, so values such as `949` and `949.0` are treated as equal when appropriate.
+- `estimated_cost_usd` is meaningful only when `OPENAI_PRICE_INPUT_PER_1M` and `OPENAI_PRICE_OUTPUT_PER_1M` are explicitly configured.
+- The current cost estimate uses standard input/output token prices. Cached-input pricing is not modeled separately.
+- Because `hybrid` may skip the LLM entirely on easy samples, its average request count and average cost per sample can be substantially below `1.0`.
 
 ## Outputs
 
@@ -179,7 +230,15 @@ Each per-pipeline output file stores:
 - `completeness`
 - `exact_match`
 - `latency`
+- `latency_stddev`
 - `failure_rate`
+- `benchmark_runs`
+- `llm_requests`
+- `prompt_tokens`
+- `completion_tokens`
+- `total_tokens`
+- `estimated_cost_usd`
+- `llm_model` for LLM-backed pipelines
 
 ## Notes
 
