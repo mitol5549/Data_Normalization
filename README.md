@@ -160,6 +160,7 @@ If `BENCHMARK_RUNS` is greater than `1`, each sample is executed multiple times.
 
 - `accuracy`, `completeness`, `exact_match`, and `failure_rate` are computed from the first run only
 - `latency`, `latency_stddev`, token usage, request counts, and estimated cost are averaged across all runs
+- the prediction written to each `*_normalized.json` file is the first-run prediction for that sample
 
 This design keeps quality evaluation simple and reproducible while reducing noise in runtime measurements.
 
@@ -193,6 +194,7 @@ Operational metrics:
 - `estimated_cost_usd` is meaningful only when `OPENAI_PRICE_INPUT_PER_1M` and `OPENAI_PRICE_OUTPUT_PER_1M` are explicitly configured.
 - The current cost estimate uses standard input/output token prices. Cached-input pricing is not modeled separately.
 - Because `hybrid` may skip the LLM entirely on easy samples, its average request count and average cost per sample can be substantially below `1.0`.
+- For stricter reproducibility across time, prefer pinning a versioned model name when available instead of relying on a moving alias such as `gpt-4o-mini`.
 
 ## Outputs
 
@@ -222,7 +224,7 @@ Each per-pipeline output file stores:
 
 - the original input record,
 - the ground-truth normalized record,
-- the pipeline prediction.
+- the pipeline prediction from the first run of each sample.
 
 `outputs/evaluation_summary.json` stores the aggregate metrics for each dataset and pipeline:
 
@@ -239,10 +241,3 @@ Each per-pipeline output file stores:
 - `total_tokens`
 - `estimated_cost_usd`
 - `llm_model` for LLM-backed pipelines
-
-## Notes
-
-- The rule-based pipeline uses deterministic top-level source-field mappings and value normalization, and returns `None` for target fields it cannot fill.
-- The LLM pipeline asks the model for the full target object and validates the returned fields against the target schema.
-- The hybrid pipeline runs rule-based extraction first and sends only `None` target fields to the LLM for completion.
-- Because hybrid still pays for an LLM call when many fields are unresolved, it is usually faster than full LLM on easy and medium cases, but not guaranteed to be faster on every hard case.
