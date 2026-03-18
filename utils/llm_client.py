@@ -39,6 +39,13 @@ def build_client():
 
 client = build_client()
 last_error = None
+usage_totals = {
+    "requests": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "total_tokens": 0,
+    "estimated_cost_usd": 0.0,
+}
 
 
 def get_llm_status():
@@ -64,6 +71,63 @@ def get_llm_status():
     return {"mode": "api", "reason": "OpenAI API is configured"}
 
 
+def get_llm_model():
+    return os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+
+
+def get_llm_temperature():
+    try:
+        return float(os.getenv("OPENAI_TEMPERATURE", "0"))
+    except ValueError:
+        return 0.0
+
+
+def _get_pricing():
+    input_price = os.getenv("OPENAI_PRICE_INPUT_PER_1M")
+    output_price = os.getenv("OPENAI_PRICE_OUTPUT_PER_1M")
+
+    if input_price is None or output_price is None:
+        return None
+
+    try:
+        return {
+            "input_per_1m": float(input_price),
+            "output_per_1m": float(output_price),
+        }
+    except ValueError:
+        return None
+
+
+def _usage_value(usage, key):
+    if usage is None:
+        return 0
+    return getattr(usage, key, 0) or 0
+
+
+def snapshot_usage():
+    return dict(usage_totals)
+
+
+def _record_usage(response):
+    usage = getattr(response, "usage", None)
+    input_tokens = _usage_value(usage, "input_tokens")
+    output_tokens = _usage_value(usage, "output_tokens")
+    total_tokens = _usage_value(usage, "total_tokens") or (input_tokens + output_tokens)
+
+    usage_totals["requests"] += 1
+    usage_totals["input_tokens"] += input_tokens
+    usage_totals["output_tokens"] += output_tokens
+    usage_totals["total_tokens"] += total_tokens
+
+    pricing = _get_pricing()
+    if pricing is None:
+        return
+
+    usage_totals["estimated_cost_usd"] += (
+        input_tokens * pricing["input_per_1m"] + output_tokens * pricing["output_per_1m"]
+    ) / 1_000_000
+
+
 def ask_llm(prompt):
     global last_error
 
@@ -71,15 +135,18 @@ def ask_llm(prompt):
         last_error = "OpenAI client is not initialized"
         return None
 
-    model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
-    print(f"    LLM request started ({model})")
+    model = get_llm_model()
+    temperature = get_llm_temperature()
+    print(f"    LLM request started ({model}, temperature={temperature:g})")
 
     try:
         response = client.responses.create(
             model=model,
             input=prompt,
+            temperature=temperature,
         )
         last_error = None
+        _record_usage(response)
     except Exception as error:
         last_error = f"{type(error).__name__}: {error}"
         print(f"    LLM request failed: {last_error}")
