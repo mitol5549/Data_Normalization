@@ -143,6 +143,17 @@ You can place them in a local `.env` file.
 python3 main.py
 ```
 
+Recommended experimental run configuration:
+
+```bash
+OPENAI_MODEL=gpt-4o-mini \
+OPENAI_TEMPERATURE=0 \
+BENCHMARK_RUNS=3 \
+OPENAI_PRICE_INPUT_PER_1M=0.15 \
+OPENAI_PRICE_OUTPUT_PER_1M=0.60 \
+python3 main.py
+```
+
 The evaluation runs every dataset through all three pipelines and writes both aggregate metrics and per-sample predictions to `outputs/`.
 
 If the OpenAI client is unavailable or the model response is invalid, the `llm` pipeline fails instead of falling back to local heuristics. The `hybrid` pipeline only depends on the LLM when rule-based extraction leaves unresolved fields.
